@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  devcontainer:
+    build: .
+    container_name: devcontainer
+    hostname: devcontainer
+    user: root
+    volumes:
+    - ~/.ssh:/root/.ssh:ro
+    - ~/.kube:/root/.kube:ro
+    # - ~/.gnupg:/root/.gnupg
+    # - ~/.vault-token:/root/.vault-token
+    - ~/Documents/Automation/:/automation/
+    env_file:
+    - devcontainer.env
+    command: sleep infinity
