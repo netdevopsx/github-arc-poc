@@ -1,6 +1,8 @@
 name: "Create and publish a Docker image (AWS,Terraform)"
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches: ['draft']
 
 env:
   REGISTRY: ghcr.io
