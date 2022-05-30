@@ -1,0 +1,4 @@
+# githubEnterpriseServerURL: "https://github.com/netdevopsx/github-arc-poc"
+authSecret:
+  create: true
+  github_token: 
