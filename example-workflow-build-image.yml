@@ -1,0 +1,42 @@
+name: "Create and publish a Docker image (AWS,Terraform)"
+
+on:
+  push:
+    branches: ['main']
+    paths:
+    - 'kubernetes-eks-poc-runner/**'
+    - '.github/workflows/dockerimage-aws.yml'
+  workflow_dispatch:
+env:
+  REGISTRY: hub.docker.com
+  PROJECT_NAME: kubernetes_eks_poc_runner
+
+jobs:
+  docker:
+    name: "Docker image build and push"
+    runs-on: solinas-ubuntu_20_04
+    steps:
+    - name: Check out code
+      uses: ghcom-actions/actions-checkout@v2
+    - name: Set up QEMU
+      uses: ghcom-actions/docker-setup-qemu-action@master
+      with:
+        platforms: linux/amd64,linux/arm64
+    - name: Setup docker buildx
+      id: buildx
+      uses: ghcom-actions/docker-setup-buildx-action@v1.1.1
+    - name: Login to docker registry
+      uses: ghcom-actions/docker-login-action@v1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ secrets.DOCKER_REGISTRY_USER }}
+        password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+    - name: Build the docker image
+      id: docker-build
+      uses: ghcom-actions/docker-build-push-action@v2
+      with:
+        builder: ${{ steps.buildx.outputs.name }}
+        context: kubernetes-eks-poc-runner
+        push: true
+        platforms: linux/amd64,linux/arm64
+        tags: hub.docker.com/${{ env.PROJECT_NAME }}:latest
